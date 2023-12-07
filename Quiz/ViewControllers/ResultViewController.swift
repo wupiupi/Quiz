@@ -20,11 +20,10 @@ final class ResultViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.setHidesBackButton(true, animated: false)
-        
-        guard let result = getMostFrequentNumber(for: chosenAnswers) else { return }
-        
-        answerLabel.text = "Вы – \(result.rawValue)"
-        descriptionLabel.text = result.definition
+        let time = ContinuousClock().measure {
+            getMostFrequentNumber()
+        }
+        print(time)
     }
     
     // MARK: - IB Actions
@@ -35,8 +34,8 @@ final class ResultViewController: UIViewController {
 
 // MARK: - Private Methods
 private extension ResultViewController {
-    func getMostFrequentNumber(for answers: [Answer]) -> Person? {
-        let persons = answers.map { $0.person }
+    func getMostFrequentNumber() {
+        let persons = chosenAnswers.map { $0.person }
         var personCounter: [Person: Int] = [:]
 
         for person in persons {
@@ -44,13 +43,17 @@ private extension ResultViewController {
         }
         
         let sortedPersonCounter = personCounter.sorted { $0.value > $1.value }
-        sortedPersonCounter.forEach { print($0.key, $0.value) }
-        let result = sortedPersonCounter.first?.key
+        guard let result = sortedPersonCounter.first?.key else { return }
         
         // Get answer in one string
 //        let result = Dictionary(grouping: answers) { $0.person }
 //            .sorted { $0.value.count > $1.value.count }.first?.key
         
-        return result
+        setupUI(with: result)
+    }
+    
+    func setupUI(with value: Person) {
+        answerLabel.text = "Вы – \(value.rawValue)"
+        descriptionLabel.text = value.definition
     }
 }
