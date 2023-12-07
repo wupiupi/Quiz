@@ -40,7 +40,7 @@ private extension ResultViewController {
         var personCounter: [Person: Int] = [:]
 
         for person in persons {
-            personCounter[person] = (personCounter[person] ?? 0) + 1
+            personCounter[person, default: 0] += 1
         }
         
         let sortedPersonCounter = personCounter.sorted { $0.value > $1.value }
