@@ -47,6 +47,10 @@ private extension ResultViewController {
         sortedPersonCounter.forEach { print($0.key, $0.value) }
         let result = sortedPersonCounter.first?.key
         
+        // Get answer in one string
+//        let result = Dictionary(grouping: answers) { $0.person }
+//            .sorted { $0.value.count > $1.value.count }.first?.key
+        
         return result
     }
 }
